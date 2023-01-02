@@ -61,7 +61,7 @@
     \subsection{CUT modelis}
         Antras iš trijų naudotų modelių yra CUT (pilnas angliškas pavadinimas - contrastive unpaired translation), išleistas 2020 metais. Pagrindinis jo bruožas yra, jog jis yra pritaikytas mokymui su nesuporuotomis nuotraukomis (t.y. nuotraukai iš domeno A, nėra tiesioginio atitikmens iš domeno B). Kitaip nei CycleGAN, CUT mokymas ir nuotraukų transformavimas vykdomas tik į vieną pusę, tai reiškia, kad norint nuotraukas transformuoti iš domeno A į domeną B ir iš domeno B į domeną A, yra reikalingi du atskirai išmokyti modeliai. Dėl vienpusio nuotraukų transformavimo, mokymo procedūra yra supaprastinama ir paspartinama. Šio modelio tikslas yra transformuojant perimti norimo domeno išvaizdą, bet išlaikyti transformuojamos nuotraukos struktūrą ir esminį turinį. Būtent ši CUT modelio savybė ir pakiša koją transformuojant nuotraukas kai kuriuose domenuose, kadangi jei apmokant modelį yra dažnai pasitaikančių artefaktų, tai jie gali dažnai atsikartoti ir transformuojamose nuotraukose, tai yra pabrėžiama "Enhancing Photorealism Enhancement" \cite{EnPhEn} straipsnyje, kur transformuojant GTA V vaizdus, CUT modelis dažnai ant žaidėjo automobilio variklio dangčio uždėdavo Mercedes žvaigždę, kuri beveik visados matoma Cityscapes duomenų rinkinyje \cite{DaimCityDaSe}, kuriuo ir buvo mokinti modeliai.
     \subsection{MSPC modelis}
-        Trečiasis naudotas modelis yra MSPC (pilnas pavadinimas angliškai - Maximum Spatial Perturbation Consistency) \cite{Mspc}. Jis yra sukurtas CycleGAN \cite{CycleGAN2017} pagrindu, todėl jo nuotraukų transformavimas taip pat yra komutatyvus. Šis modelis yra sukurtas su tikslu jį naudoti nesuporuotų nuotraukų duomenų rinkiniams, kurie dažnai priveda prie nuotraukos turinio išdarkymo. Būtent šią problemą MSPC modelis ir bando spręsti, bandant geriau išsaugoti turinio bruožus ir jų turinį. 
+        Trečiasis naudotas modelis yra MSPC (pilnas pavadinimas angliškai - Maximum Spatial Perturbation Consistency) \cite{Mspc}. Jis yra sukurtas CycleGAN \cite{CycleGAN2017} pagrindu, todėl jo nuotraukų transformavimas taip pat yra komutatyvus. Šis modelis yra sukurtas su tikslu jį naudoti nesuporuotų nuotraukų duomenų rinkiniams, kurie dažnai priveda prie nuotraukos turinio išdarkymo. Būtent šią problemą MSPC modelis ir bando spręsti, bandant geriau išsaugoti turinio bruožus ir jų turinį. Šis ir CycleGAN modeliai gali būtų mokomi suporuotais, nesuporuotais ir mišriais duomenų rinkiniais, tačiau sprendžiant šį uždavinį neįmanoma surinkti kokybiško ir kiekybiško suporuoto duomenų rinktinio, todėl yra parinktas šių modelių nesuporuoto mokymo metodas.
 \section{Metodologija}
     \subsection{Duomenų rinkiniai}
         \subsubsection{Naudojami duomenų rinkiniai}
@@ -105,9 +105,9 @@
             Kiekvienas modelis buvo mokomas 100 epochų su vientisu mokymo greičiu (0.0002) ir 35 epochomis tiesišku mokymosi greičio nykimu (angl. decay). Mokymosi greitis yra apskaičiuojama formule pavaizduota 4 paveikslėlyje. Kiekvienas modelis buvo apmokytas du kartus, vieną kartą su pirmąja GTA:VC eismo vaizdų duomenų rinkiniu, o antrą kartą su antrąja jo versija, todėl iš viso yra kiekvieno modelio dvi versijos vadinamos V1 ir V2, pavyzdžiui, CUT V1 ir CUT V2.
             \begin{figure}[H]
                 \centering
-                \[ lr = \frac{1 - max(0, ep - ep_n)}{ep_d + 1} \]
+                \[ lr = 2\times10^{-4} \times \frac{ max(0, ep - ep_n)}{ep_d + 1} \]
                 \captionsetup{width=.6\linewidth}
-                \caption{Mokymo greičio skaičiavimo formulė (čia $ep$ - einamoji epocha, 
+                \caption{Epchos mokymo greičio skaičiavimo formulė (čia $ep$ - einamoji epocha, 
                 $ep_{n}$ - epochų kiekis, $ep_{d}$ - nykimo epochų kiekis)}
             \end{figure}
 
@@ -128,11 +128,48 @@
               \end{tabular}}
               \label{tab:table example}
             \end{table}
+        \subsection{„Dingstančių automobilių" problema}
+            Išmokius CycleGAN modelį buvo pastebėta, jog pradėjo dingti tam tikros stambios detalės iš nuotraukų, svarbiausia iš jų - automobiliai. Išmokyta pirmoji CycleGAN modelio versija linksta trinti automobilius ir uždengti tai aplinkos detalėmis ar fonu. Dėl to nuspręsta buvo išbandyti CUT modelį, kadangi jis pritaikytas nesuporuotų duomenų rinkinių uždaviniams, tačiau pirmoji jo versija yra dar labiau linkusi trinti automobilius iš nuotraukų. Dėl šios problemos taip pat buvo išbandytas MSPC modelis, nes juo yra sprendžiama nuotraukų semantinių detalių palaikymo problema. Nors MSPC modelis pasiekia geresnius rezultatus nei kiti du ties šia problema, tačiau išlaikomų automobilių kiekis vis tiek liko labai mažas (žr. 2 lentelę).
+            \begin{figure}[H]
+                \centering
+                \includegraphics[scale=0.8]{img/CycleGANV1/1_real_B}
+                \includegraphics[scale=0.8]{img/CycleGANV1/1_fake_A}
+                \captionsetup{width=.8\linewidth}
+                \caption{CycleGAN modelio transformuotos nuotraukos pavyzdys, kuriame yra panaikinami automobiliai.}
+                \label{img:mlp}
+            \end{figure}
+            \begin{table}[H]
+                \footnotesize
+                \centering
+                \caption{Atpažintų automobilių kiekis duomenų rinkiniuose.}
+                {\begin{tabular}{|l|c|c|} \hline
+                    Modelio pavadinimas & Atpažintų automobilių kiekis, vnt. & Atpažintų automobilių dalis, \% \\
+                    \hline
+                    Testavimo duomenų rinkinys & 426 & - \\
+                    CycleGAN V1 & 15 & 3,5 \% \\
+                    CycleGAN V2 & 14 & 3,2 \% \\
+                    Cut V1 & 7 & 1,6 \% \\
+                    Cut V2 & 10 & 2,3 \% \\ 
+                    MSPC V1 & 10 & 2,3 \% \\
+                    MSPC V2 & 17 & 3,9 \% \\
+                    \hline
+                    \end{tabular}
+                }
+                \label{tab:table example}
+            \end{table}
+            Automobilių atpažinties nuotraukose testavimui naudojamas Centernet HG-104 \cite{CenterNet} modelis iš anksto apmokytas su Microsoft CoCo duomenų rinkiniu \cite{CocoDataset}.
+            
+            Modeliai išmokyti su patobulintu duomenų rinkiniu, kuriame yra daugiau nuotraukų, kuriose yra automobilių užimančių pakankamai didelį nuotraukos plotą, arba yra nuotraukų su daug automobilių nuotraukoje, demonstruoja geresnį sugebėjimą išlaikyti automobilius (išskyrus su CycleGAN modeliu, kurio statistika minimaliai sumažėjo). Atpažintų automobilių padidėjimas siekia 69\% su MSPC modeliu, tačiau toks patobulėjimas yra beveik bereikšmis kadangi bendras atpažintų automobilių procentas lieka labai mažas.
 
             
 
 \sectionnonum{Rezultatai ir išvados}
-
+%mašinų procentai nuotraukose tokių rezultatų paaiškinimui
+%dienos nakties problemos
+%FID
+%gamtos geras gavimasis
+%trinami kapotai
+%asfalto ir dangaus spalvos
 \sectionnonum{Santrumpos}
 \begin{enumerate}
 \item \textbf{GTA:VC} - Žaidimas „Grand Theft Auto: Vice City".
