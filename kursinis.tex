@@ -75,7 +75,7 @@
             
             OBS Studio programos paruošimo nereikėjo, bet buvo pakeistos kelios parinktys, kad kuriamas duomenų rinkinys būtų struktūriškai kuo panašesnis į šaltinio duomenų rinkinį ir vaizdo įrašai nesigautų be reikalo dideli ir sunkūs apdoroti. Pirma pakeista parinktis buvo pakeista raiška į bdd100k rinkinio nuotraukų raišką (kuri yra 1280:720 pikselių). Antras pakeitimas buvo nustatyti vaizdo įrašų kadrų dažnį kiekį į 1 kadrą per sekundę. Su paskutine parinktimi supaprastiname vaizdo įrašų perdarymą į nuotraukas, nes nereikia išmesti perteklinių nuotraukų nustačius didesnį kadrų dažnį (pvz. nustačius standartinius 60 kadrų per sekundę, gautume žymiai per daug nuotraukų).
             
-            GTA:VC žaidimui reikėjo kelių vaizdinių pakeitimų tam, kad būtų švaresni vaizdai ir būtų struktūriškai panašesnis į bdd100k duomenų rinkinį. Naudojant standartinius nustatymus yra rodomas vaizdas trečiuoju asmeniu (t.y. iš žaidėjo galo), apatiniame kairiajame kampe yra rodomas mažas žemėlapis ir viršuj dešinėje yra rodomi žaidimo duomenys: laikas, pinigai, gyvybės taškai, šarvų taškai, esami ginklai ir aktyvumas, kuriuo policija ieško žaidėjo (žr 2 pav.). Tam, kad vaizdas būtų artimesnis šaltinio domeno duomenų rinkiniui, reikėjo panaikinti žemėlapį ir informacines detales, tą žaidimas leido nustatymuose bei reikėjo nustatyti pirmą asmenį ir automobilio perspektyvos, kad nesimatytų pačio veikėjo ir taip išvengti nenorimų artefaktų (panašiai kaip įprastai lieka naudojant **dataset kur su mercedes** duomenų rinkinį, jame filmuojamas vaizdas iš automobilio Mercedes, o kadangi vaizduose yra matomas automobilio kapotas prie kurio pritvirtinta ikoniška Mercedes žvaigždė, todėl daugelyje transformuotų nuotraukų atsiranda minėtoji Mercedes žvaigždė). Šį pakeitimą žaidimas taip pat leidžia daryti, kaip konfiguracinį nustatymą. Šiuos pakeitimus implementavus, gaunamas kokybiškas ir švarus vaizdas, kuris nepalieka artefaktų ir užfiksuoja esminį turinį (žr. 3 pav.).
+            GTA:VC žaidimui reikėjo kelių vaizdinių pakeitimų tam, kad būtų švaresni vaizdai ir būtų struktūriškai panašesnis į bdd100k duomenų rinkinį. Naudojant standartinius nustatymus yra rodomas vaizdas trečiuoju asmeniu (t.y. iš žaidėjo galo), apatiniame kairiajame kampe yra rodomas mažas žemėlapis ir viršuj dešinėje yra rodomi žaidimo duomenys: laikas, pinigai, gyvybės taškai, šarvų taškai, esami ginklai ir aktyvumas, kuriuo policija ieško žaidėjo (žr 2 pav.). Tam, kad vaizdas būtų artimesnis šaltinio domeno duomenų rinkiniui, reikėjo panaikinti žemėlapį ir informacines detales, tą žaidimas leido nustatymuose bei reikėjo nustatyti pirmą asmenį ir automobilio perspektyvos, kad nesimatytų pačio veikėjo ir taip išvengti nenorimų artefaktų (panašiai kaip įprastai lieka naudojant \cite{DaimCityDaSe} duomenų rinkinį, jame filmuojamas vaizdas iš automobilio Mercedes, o kadangi vaizduose yra matomas automobilio kapotas prie kurio pritvirtinta ikoniška Mercedes žvaigždė, todėl daugelyje transformuotų nuotraukų atsiranda minėtoji Mercedes žvaigždė). Šį pakeitimą žaidimas taip pat leidžia daryti, kaip konfiguracinį nustatymą. Šiuos pakeitimus implementavus, gaunamas kokybiškas ir švarus vaizdas, kuris nepalieka artefaktų ir užfiksuoja esminį turinį (žr. 3 pav.).
             
             \begin{figure}[H]
                 \centering
@@ -95,10 +95,41 @@
             Kitame skyriuje yra minima, jog rezultatuose yra pastebėta spragų - vaizdai turi žymiai mažiau automobilių nuotraukose nei bdd100k duomenų rinkinys, todėl po kelių eksperimentų, reikėjo papildyti surinktą duomenų rinkinį nuotraukomis, kuriuose yra daug automobilių arba jie užima didesnį ekrano plotą. Tokių nuotraukų iš viso buvo padaryta 300 ir jas pridėjus prie kitų nuotraukų buvo sukurta antra duomenų rinkinio versija.
             
             Visus regionus nufilmavus, jie buvo apdoroti Python kalbos skriptu, kuris vaizdo įrašo kadrus išskaidė į atskiras nuotraukas. Taip buvo iš viso sudaryta 2000 nuotraukų, o antra duomenų rinkinio versija buvo sudaryta iš 2300 nuotraukų.
+        
+        \subsection{Mokymo platformos} %Išdėstyt, per kur mokau
+            Mokymo proceso kalibravimui ir testavimui buvo naudojama Google Colab platforma. Tačiau mokamų versijų resursai yra limituoti, vienam mokymo ciklui (~100 epochų) prireikė mėnesiui skiriamų skaičiavimo resursų (Google Colab Pro prenumerata). Dėl šios problemos bei Google Colab dėl neaktyvumo išjungiamo programos veikimo greitai buvo pereita prie Vilniaus Universiteto matematikos ir informatikos fakulteto superkompiuterio naudojimo.
+            Mokoma buvo naudojant Linux Ubuntu operacinę sistemą (20.04 versiją) su PyTorch karkasu.
+        \subsection{Mokymo procesas} %kokie modeliai, kiek laiko truko, einamieji pavyzdžiai 
+            Mokymui buvo išrinkti trys modeliai: CycleGAN, CUT ir MSPC. Kadangi CUT ir MSPC kodo implementacija yra sukurta CycleGAN modelio realizacijos programinio kodo pagrindu \cite{CycleGANRepo}, tiek duomenų rinkinio, tiek pačio mokymo proceso keisti drastiškai nereikėjo. 
 
-        \subsection{Parinkti modeliai}
-            Mokymui buvo išrinkti trys modeliai: CycleGAN, CUT ir MSPC.
-        \subsection{Modelių mokymas}
+            Kiekvienas modelis buvo mokomas 100 epochų su vientisu mokymo greičiu (0.0002) ir 35 epochomis tiesišku mokymosi greičio nykimu (angl. decay). Mokymosi greitis yra apskaičiuojama formule pavaizduota 4 paveikslėlyje. Kiekvienas modelis buvo apmokytas du kartus, vieną kartą su pirmąja GTA:VC eismo vaizdų duomenų rinkiniu, o antrą kartą su antrąja jo versija, todėl iš viso yra kiekvieno modelio dvi versijos vadinamos V1 ir V2, pavyzdžiui, CUT V1 ir CUT V2.
+            \begin{figure}[H]
+                \centering
+                \[ lr = \frac{1 - max(0, ep - ep_n)}{ep_d + 1} \]
+                \captionsetup{width=.6\linewidth}
+                \caption{Mokymo greičio skaičiavimo formulė (čia $ep$ - einamoji epocha, 
+                $ep_{n}$ - epochų kiekis, $ep_{d}$ - nykimo epochų kiekis)}
+            \end{figure}
+
+            CycleGAN ir MSPC modelių mokymas vyko žymiai ilgiau nei CUT modelio mokymo, dėl jų transformacijų komutatyvumo požymio, kadangi reikia nuotrauką transformuot tiek iš domeno A į B, tiek iš B į A ir MSPC modelio mokymas truko ilgiau nei CycleGAN dėl mažesnio skaičiavimų kiekio, reikalingų minėtam vaizdo detalių palaikymui.
+            \begin{table}[H]\footnotesize
+              \centering
+              \caption{Modelių mokymo trukmės}
+              {\begin{tabular}{|l|c|c|} \hline
+                Modelio pavadinimas & Mokymo laikas, minutės\\
+                \hline
+                Cut V1 & 1524 \\
+                Cut V2 & 1520 \\ 
+                MSPC V1 & 4136 \\
+                MSPC V2 & 3897 \\
+                CycleGAN V1 & 2806 \\
+                CycleGAN V2 & 2620 \\
+                \hline
+              \end{tabular}}
+              \label{tab:table example}
+            \end{table}
+
+            
 
 \sectionnonum{Rezultatai ir išvados}
 
