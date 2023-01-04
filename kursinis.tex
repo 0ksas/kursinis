@@ -39,9 +39,7 @@
     Paveikslėlio vertimas kitu paveikslėliu (angl. image-to-image (I2I) translation) yra plačiai taikoma metodika kompiuterių regos ir paveikslų apdorojimo problemoms spręsti \cite{ImTImTr}. Metodai, sprendžiantys šias problemas, gali būti taikomi parinktų specifinių paveikslėlių požymių keitimui, trūkstamų paveikslėlio pikselių užpildymui arba realistinių vaizdų generavimui. Šiame darbe pristatomas naujas įrankis generuoti žaidimo eismo vaizdus iš realistinių eismo vaizdų. Ši taikymo sritis gali būti naudinga kuriant žaidimų meninį turinį (pavyzdžiui, tekstūras, realistinių objektų dizaino atitikmenis žaidimui), kuriant animacijas. Ir nors realistinių vaizdų transformavimas į nerealistinių vaizdų domeną nėra naujas (pavyzdžiui, veido nuotraukas transformuoti į animacinių filmukų stilių), kelių eismo nuotraukų transformavimas į vaizdo žaidimų domeną yra labai mažai nagrinėtas.
     
     Šio tyrimo tikslas ir yra - sukurti modelį, kuris generuotų tam tikro žaidimo vaizdus iš jų norimo realistinio atitikmens, šiame tyrime buvo pasirinkta kurti žaidimo „Grand Theft Auto: Vice City" (toliau trumpinama „GTA:VC") domeną dėl jo išskirtinio meninio stiliaus ir ryškaus domeno požymių skirtumo lyginant su realaus eismo nuotraukomis.
-    
-    Tyrimo tikslas yra sukurti modelį, kuris pasiektų FID įvertį žemesnį nei 100, vizualiai būtų kuo panašesnis į žaidimų vaizdus ir išsaugotų kuo daugiau tikrų nuotraukų detalių.
-\section{Literatūra ir kiti tyrimai}
+\section{Generatyviniai adversariniai tinklai}
     \subsection{Žaidimų vaizdai į realybės vaizdus}
         Tyrimas kuris atkreipė daug dirbtinio intelekto ir vaizdo žaidimų mėgėjų dėmesį yra aprašytas Intel dirbtinio intelekto mokslininkų straipsnyje "Enhancing Photorealism Enhancement" \cite{EnPhEn}, kuriame pasakojama, kaip išnaudojus modernias dirbtinio intelekto technologijas yra sukuriamas nuotraukų transformatoriaus modelis, sugebantis žaidimo GTA V automobilių eismo vaizdus paversti foto realistiniais, lyg įrašytais automobilio registratoriumi. Jis vienas pirmųjų įtikinamai, švariai, be prarastų esminių nuotraukų detalių ir be pridėtinių artefaktų sugebėjo transformuoti nuotrauką į realistiškai atrodantį vaizdą (žr. 1 pav.). Tai davė idėją šiam tyrimui - apsukti puses ir sukurti modelį, kuris pagal tuos pačius atributus sugebėtų transformuoti realybės automobilių eismo vaizdus į vaizdo žaidimo automobilių eismo vaizdus.
         \begin{figure}[H]
@@ -62,7 +60,7 @@
         Antras iš trijų naudotų modelių yra CUT (pilnas angliškas pavadinimas - contrastive unpaired translation), išleistas 2020 metais. Pagrindinis jo bruožas yra, jog jis yra pritaikytas mokymui su nesuporuotomis nuotraukomis (t.y. nuotraukai iš domeno A, nėra tiesioginio atitikmens iš domeno B). Kitaip nei CycleGAN, CUT mokymas ir nuotraukų transformavimas vykdomas tik į vieną pusę, tai reiškia, kad norint nuotraukas transformuoti iš domeno A į domeną B ir iš domeno B į domeną A, yra reikalingi du atskirai išmokyti modeliai. Dėl vienpusio nuotraukų transformavimo, mokymo procedūra yra supaprastinama ir paspartinama. Šio modelio tikslas yra transformuojant perimti norimo domeno išvaizdą, bet išlaikyti transformuojamos nuotraukos struktūrą ir esminį turinį. Būtent ši CUT modelio savybė ir pakiša koją transformuojant nuotraukas kai kuriuose domenuose, kadangi jei apmokant modelį yra dažnai pasitaikančių artefaktų, tai jie gali dažnai atsikartoti ir transformuojamose nuotraukose, tai yra pabrėžiama "Enhancing Photorealism Enhancement" \cite{EnPhEn} straipsnyje, kur transformuojant GTA V vaizdus, CUT modelis dažnai ant žaidėjo automobilio variklio dangčio uždėdavo Mercedes žvaigždę, kuri beveik visados matoma Cityscapes duomenų rinkinyje \cite{DaimCityDaSe}, kuriuo ir buvo mokinti modeliai.
     \subsection{MSPC modelis}
         Trečiasis naudotas modelis yra MSPC (pilnas pavadinimas angliškai - Maximum Spatial Perturbation Consistency) \cite{Mspc}. Jis yra sukurtas CycleGAN \cite{CycleGAN2017} pagrindu, todėl jo nuotraukų transformavimas taip pat yra komutatyvus. Šis modelis yra sukurtas su tikslu jį naudoti nesuporuotų nuotraukų duomenų rinkiniams, kurie dažnai priveda prie nuotraukos turinio išdarkymo. Būtent šią problemą MSPC modelis ir bando spręsti, bandant geriau išsaugoti turinio bruožus ir jų turinį. Šis ir CycleGAN modeliai gali būtų mokomi suporuotais, nesuporuotais ir mišriais duomenų rinkiniais, tačiau sprendžiant šį uždavinį neįmanoma surinkti kokybiško ir kiekybiško suporuoto duomenų rinktinio, todėl yra parinktas šių modelių nesuporuoto mokymo metodas.
-\section{Metodologija}
+\section{Eksperimentas}
     \subsection{Duomenų rinkiniai}
         \subsubsection{Naudojami duomenų rinkiniai}
             Vaizdų transformavimui iš realistinių į GTA:VC vaizdus reikėjo dviejų duomenų rinkinių: realaus eismo vaizdų ir žaidimo eismo vaizdų. Realaus eismo vaizdų duomenų rinkinių yra pakankamai daug, todėl jų rinkti nereikėjo ir buvo pasirinktas bdd100k rinkinys, o GTA:VC vaizdams reikėjo kurti savo duomenų rinkinį, kadangi kokybiško ir kiekybiško rinkinio internete rasti nepavyko. 
@@ -71,7 +69,7 @@
 
             Papildomo apdorojimo ar modifikacijų duomenų rinkiniui nereikėjo, išskyrus paprasčiausią direktorijų keitimą ir aplankų pervadinimą, jog modelio treniravimo algoritmas žinotų, kur tiksliai rasti šaltinio domeno duomenų rinkinį.
         \subsubsection{Grand Theft Auto: Vice City duomenų rinkinys}
-            Eksperimentą daryti buvo norima su GTA:VC vaizdais, tačiau jo duomenų rinkinio internete rasti nepavyko, todėl teko jį sukurti. Džiugu, jog kokybišką ir kiekybišką duomenų rinkinį leido sukurti žaidimo grafiniai nustatymai, todėl papildomų modifikacijų į žaidimą diegti nereikėjo, vienintelis dalykas, ko prireikė - ekrano vaizdo įrašymo programinės įrangos. Ekrano vaizdo įrašymui naudojama buvo OBS Studio programa.
+            Eksperimentą daryti buvo norima su GTA:VC vaizdais, tačiau jo duomenų rinkinio internete rasti nepavyko, todėl teko jį sukurti. Kokybišką ir kiekybišką duomenų rinkinį leido sukurti žaidimo grafiniai nustatymai, todėl papildomų modifikacijų į žaidimą diegti nereikėjo, vienintelis dalykas, ko prireikė - ekrano vaizdo įrašymo programinės įrangos. Ekrano vaizdo įrašymui naudojama buvo OBS Studio programa.
             
             OBS Studio programos paruošimo nereikėjo, bet buvo pakeistos kelios parinktys, kad kuriamas duomenų rinkinys būtų struktūriškai kuo panašesnis į šaltinio duomenų rinkinį ir vaizdo įrašai nesigautų be reikalo dideli ir sunkūs apdoroti. Pirma pakeista parinktis buvo pakeista raiška į bdd100k rinkinio nuotraukų raišką (kuri yra 1280:720 pikselių). Antras pakeitimas buvo nustatyti vaizdo įrašų kadrų dažnį kiekį į 1 kadrą per sekundę. Su paskutine parinktimi supaprastiname vaizdo įrašų perdarymą į nuotraukas, nes nereikia išmesti perteklinių nuotraukų nustačius didesnį kadrų dažnį (pvz. nustačius standartinius 60 kadrų per sekundę, gautume žymiai per daug nuotraukų).
             
@@ -97,19 +95,13 @@
             Visus regionus nufilmavus, jie buvo apdoroti Python kalbos skriptu, kuris vaizdo įrašo kadrus išskaidė į atskiras nuotraukas. Taip buvo iš viso sudaryta 2000 nuotraukų, o antra duomenų rinkinio versija buvo sudaryta iš 2300 nuotraukų.
         
         \subsection{Mokymo platformos} %Išdėstyt, per kur mokau
-            Mokymo proceso kalibravimui ir testavimui buvo naudojama Google Colab platforma. Tačiau mokamų versijų resursai yra limituoti, vienam mokymo ciklui (~100 epochų) prireikė mėnesiui skiriamų skaičiavimo resursų (Google Colab Pro prenumerata). Dėl šios problemos bei Google Colab dėl neaktyvumo išjungiamo programos veikimo greitai buvo pereita prie Vilniaus Universiteto matematikos ir informatikos fakulteto superkompiuterio naudojimo.
+            Mokymo proceso kalibravimui ir testavimui buvo naudojama Google Colab platforma. Tačiau mokamų versijų resursai yra limituoti, vienam mokymo ciklui (100 epochų) prireikė mėnesiui skiriamų skaičiavimo resursų (Google Colab Pro prenumerata). Dėl šios problemos bei Google Colab dėl neaktyvumo išjungiamo programos veikimo greitai buvo pereita prie Vilniaus Universiteto matematikos ir informatikos fakulteto superkompiuterio naudojimo.
             Mokoma buvo naudojant Linux Ubuntu operacinę sistemą (20.04 versiją) su PyTorch karkasu.
         \subsection{Mokymo procesas} %kokie modeliai, kiek laiko truko, einamieji pavyzdžiai 
             Mokymui buvo išrinkti trys modeliai: CycleGAN, CUT ir MSPC. Kadangi CUT ir MSPC kodo implementacija yra sukurta CycleGAN modelio realizacijos programinio kodo pagrindu \cite{CycleGANRepo}, tiek duomenų rinkinio, tiek pačio mokymo proceso keisti drastiškai nereikėjo. 
 
-            Kiekvienas modelis buvo mokomas 100 epochų su vientisu mokymo greičiu (0.0002) ir 35 epochomis tiesišku mokymosi greičio nykimu (angl. decay). Mokymosi greitis yra apskaičiuojama formule pavaizduota 4 paveikslėlyje. Kiekvienas modelis buvo apmokytas du kartus, vieną kartą su pirmąja GTA:VC eismo vaizdų duomenų rinkiniu, o antrą kartą su antrąja jo versija, todėl iš viso yra kiekvieno modelio dvi versijos vadinamos V1 ir V2, pavyzdžiui, CUT V1 ir CUT V2.
-            \begin{figure}[H]
-                \centering
-                \[ lr = 2\times10^{-4} \times \frac{ max(0, ep - ep_n)}{ep_d + 1} \]
-                \captionsetup{width=.6\linewidth}
-                \caption{Epchos mokymo greičio skaičiavimo formulė (čia $ep$ - einamoji epocha, 
-                $ep_{n}$ - epochų kiekis, $ep_{d}$ - nykimo epochų kiekis)}
-            \end{figure}
+            Kiekvienas modelis buvo mokomas 100 epochų su vientisu mokymo greičiu (0.0002) ir 35 epochomis tiesišku mokymosi greičio nykimu (angl. decay).  Kiekvienas modelis buvo apmokytas du kartus, vieną kartą su pirmąja GTA:VC eismo vaizdų duomenų rinkiniu, o antrą kartą su antrąja jo versija, todėl iš viso yra kiekvieno modelio dvi versijos vadinamos V1 ir V2, pavyzdžiui, CUT V1 ir CUT V2. Mokymosi greitis yra apskaičiuojama pagal šią formulę:
+            \[ lr = 2\times10^{-4} \times \frac{ max(0, ep - ep_n)}{ep_d + 1},\] čia $ep$ - einamoji epocha, $ep_{n}$ - epochų kiekis, $ep_{d}$ - nykimo epochų kiekis.
 
             CycleGAN ir MSPC modelių mokymas vyko žymiai ilgiau nei CUT modelio mokymo, dėl jų transformacijų komutatyvumo požymio, kadangi reikia nuotrauką transformuot tiek iš domeno A į B, tiek iš B į A ir MSPC modelio mokymas truko ilgiau nei CycleGAN dėl mažesnio skaičiavimų kiekio, reikalingų minėtam vaizdo detalių palaikymui.
             \begin{table}[H]\footnotesize
@@ -164,7 +156,7 @@
             
 
 \sectionnonum{Rezultatai ir išvados}
-%mašinų procentai nuotraukose tokių rezultatų paaiškinimui
+%mašinų procentai nuotraukose tokių rezultatų paaiškinimui (kiek realių yra automboiliųu)
 %dienos nakties problemos
 %FID
 %gamtos geras gavimasis
