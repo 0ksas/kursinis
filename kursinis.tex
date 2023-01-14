@@ -135,7 +135,7 @@
         \subsection{Modelių vertinimo metrika}
             Modelių nuotraukų transformavimo kokybei vertinti buvo parinkta FID (angl. \emph{Fréchet inception distance} – Fréchet pradžios atstumas) vertinimo metrika, dažnai naudojama vertinti modelių generuojamų nuotraukų kokybei. Šia metrika apskaičiuojamas atstumas tarp realių ir sugeneruotų nuotraukų požymių vektorių.
 
-            Šis įvertis parodo, kaip nuotraukos iš dviejų grupių yra struktūriškai panašios. Žemesnis įvertis reiškia kokybiškesnes nuotraukas, o didelis – prastesnes. FID metrika pirmą kartą pristatyta ir panaudota 2017 metais Linco Johaneso Keplerio universiteto tyrimo straipsnyje pavadinimu "GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium"\cite{FidStart}. Šis įvertis pristatytas kaip geresnė metrika vietoj pradžios įverčio (angl. \emph{inception score}, trumpinama IS), kadangi IS vertina tik sugeneruotų nuotraukų kokybę, tačiau FID vertina sugeneruotų nuotraukų kokybę lyginant su šaltinio domeno duomenų rinkiniu.
+            Šis įvertis parodo, kaip nuotraukos iš dviejų grupių yra struktūriškai panašios. Žemesnis įvertis reiškia kokybiškesnes nuotraukas, o didelis – prastesnes. FID metrika pirmą kartą pristatyta ir panaudota 2017 metais Linco Johaneso Keplerio universiteto tyrimo straipsnyje pavadinimu „GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium“\cite{FidStart}. Šis įvertis pristatytas kaip geresnė metrika vietoj pradžios įverčio (angl. \emph{inception score}, trumpinama IS), kadangi IS vertina tik sugeneruotų nuotraukų kokybę, tačiau FID vertina sugeneruotų nuotraukų kokybę lyginant su šaltinio domeno duomenų rinkiniu.
             
         \subsection{„Dingstančių automobilių“ problema}
             Išmokius CycleGAN modelį buvo pastebėta, jog pradėjo dingti tam tikros stambios detalės iš nuotraukų, svarbiausia iš jų – automobiliai. Išmokyta pirmoji CycleGAN modelio versija linksta trinti automobilius ir uždengti tai aplinkos detalėmis ar fonu. Dėl to nuspręsta buvo išbandyti CUT modelį, kadangi jis pritaikytas nesuporuotų duomenų rinkinių uždaviniams, tačiau pirmoji jo versija yra dar labiau linkusi trinti automobilius iš nuotraukų. Dėl šios problemos taip pat buvo išbandytas MSPC modelis, nes juo yra sprendžiama nuotraukų semantinių detalių palaikymo problema. Nors MSPC modelis pasiekia geresnius rezultatus nei kiti du ties šia problema, tačiau išlaikomų automobilių kiekis vis tiek liko labai mažas (žr. 2 lentelę).
@@ -244,36 +244,19 @@
             Asfalto spalva taip pat yra labai gerai parenkama. Nors šios detalės yra labai paprastai transformuojamos, tačiau jos sudaro didelę dalį bendros transformuotos nuotraukos kokybės ir panašumo į vaizdo žaidimo domeną.
             
 \sectionnonum{Rezultatai ir išvados}
-    Gausesni transformuotų nuotraukų pavyzdžiai yra prisegti priedų skiltyje 
-    \subsection*{FID įverčiai ir automobilių atpažintų automobilių kiekiai}
-        Modelių sąrašas nuo geriausio iki blogiausio vertinant pagal FID:
-        \begin{enumerate}
-            \item MSPC V2
-            \item CycleGAN V2
-            \item MSPC V1
-            \item CycleGAN V1
-            \item CUT V1
-            \item CUT V2
-        \end{enumerate}
-
-        Modelių sąrašas nuo geriausio iki blogiausio vertinant pagal transformuotose nuotraukose atpažintų automobilių kiekius:
-        \begin{enumerate}
-            \item MSPC V2
-            \item CycleGAN V1
-            \item CycleGAN V2
-            \item MSPC V1
-            \item CUT V2
-            \item CUT V1
-        \end{enumerate}
-
-    \subsection*{Išvados}
-        Vaizdų transformavimas buvo įgyvendintas iki tokio lygio, kad galima nesunkiai atpažinti transformuoto vaizdo domeną, tačiau yra vietų, kurias tobulinti reikėtų, pagrindinė iš jų: nuotraukų semantinio turinio išlaikymas (paros metas, automobiliai). Modeliai dažnai panaikina automobilius iš transformuojamų nuotraukų, tačiau gerai sugeba transformuoti kelius, dangų ir gamtinius objektus.
-        Tyrimo išvados:
-        \begin{enumerate}
-            \item Kokybiškiausius rezultatus duodantis modelis yra MSPC.
-            \item Duomenų rinkinių struktūriniai ir objektų dažnumo skirtumai stipriai įtakoja nuotraukų transformavimo kokybę.
-            \item Kokybiškesnis nuotraukos transformavimas nebūtinai reiškia kokybiškesnį nuotraukos turinio išlaikymą.
-        \end{enumerate}
+    Gausesni transformuotų nuotraukų pavyzdžiai yra prisegti priedų skiltyje.
+    
+    Modelis pasiekęs žemiausią FID (145) yra MSPC V2. 
+    
+    Modelis, kurio transformuotuose vaizduose aptinkama daugiausia automobilių (3,9~\%) yra MSPC V2.
+    
+    Vaizdų transformavimas buvo įgyvendintas iki tokio lygio, kad galima nesunkiai atpažinti transformuoto vaizdo domeną, tačiau yra vietų, kurias tobulinti reikėtų, pagrindinė iš jų: nuotraukų semantinio turinio išlaikymas (paros metas, automobiliai). Modeliai dažnai panaikina automobilius iš transformuojamų nuotraukų, tačiau gerai sugeba transformuoti kelius, dangų ir gamtinius objektus.
+    Tyrimo išvados:
+    \begin{enumerate}
+        \item Kokybiškiausius rezultatus duodantis modelis yra MSPC.
+        \item Duomenų rinkinių struktūriniai ir objektų dažnumo skirtumai stipriai įtakoja nuotraukų transformavimo kokybę.
+        \item Didesnis FID įvertis nebūtinai reiškia kokybiškesnį nuotraukos turinio išlaikymą.
+    \end{enumerate}
 
 \sectionnonum{Santrumpos}
     \begin{enumerate}
